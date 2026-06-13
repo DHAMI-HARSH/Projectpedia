@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { formatDate, getCategoryColor } from "@/lib/utils";
+import { formatDate, getCategoryColor, normalizeExternalUrl } from "@/lib/utils";
 import { Project } from "@/types/project";
 import Link from "next/link";
 import { Globe, GitBranch } from "lucide-react";
@@ -7,6 +7,9 @@ import StatusBadge from "./StatusBadge";
 import TechChip from "./TechChip";
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const liveUrl = normalizeExternalUrl(project.live_url);
+  const githubUrl = normalizeExternalUrl(project.github_url);
+
   return (
     <article className="hover-lift surface-glow motion-enter rounded-[28px] border border-white/70 bg-white/95 p-4 shadow-[0_18px_55px_rgba(15,35,61,0.06)]">
       <div className="relative mb-4 aspect-[16/10] overflow-hidden rounded-[22px] bg-zinc-100">
@@ -24,14 +27,14 @@ export default function ProjectCard({ project }: { project: Project }) {
         <Link href={`/projects/${project.slug}`} className="inline-flex items-center text-sm font-semibold text-[var(--accent)] hover:text-[var(--accent-hover)]">
           View Documentation &rarr;
         </Link>
-        {project.live_url ? (
-          <a className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--accent)]" href={project.live_url} rel="noreferrer" target="_blank">
+        {liveUrl ? (
+          <a className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--accent)]" href={liveUrl} rel="noreferrer" target="_blank">
             <Globe className="h-4 w-4" />
             Live
           </a>
         ) : null}
-        {project.github_url ? (
-          <a className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--accent)]" href={project.github_url} rel="noreferrer" target="_blank">
+        {githubUrl ? (
+          <a className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--accent)]" href={githubUrl} rel="noreferrer" target="_blank">
             <GitBranch className="h-4 w-4" />
             Code
           </a>

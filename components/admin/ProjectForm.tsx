@@ -13,6 +13,7 @@ import TagInput from "./TagInput";
 import FeatureListEditor from "./FeatureListEditor";
 import ScreenshotUrlList from "./ScreenshotUrlList";
 import MilestoneEditor from "./MilestoneEditor";
+import { normalizeExternalUrl } from "@/lib/utils";
 
 type ProjectFormState = Omit<Partial<Project>, "milestones"> & {
   milestones: Partial<Milestone>[];
@@ -46,6 +47,10 @@ export default function ProjectForm({ mode, project }: { mode: "create" | "edit"
   function normalizeOptionalText(value?: string) {
     const nextValue = value?.trim() ?? "";
     return nextValue || undefined;
+  }
+
+  function normalizeProjectUrl(value?: string) {
+    return normalizeExternalUrl(value);
   }
 
   function updateDocumentation(value: string) {
@@ -88,8 +93,8 @@ export default function ProjectForm({ mode, project }: { mode: "create" | "edit"
         title: (form.title ?? "").trim(),
         short_desc: (form.short_desc ?? "").trim(),
         documentation: normalizeDocumentationInput(form.documentation ?? ""),
-        live_url: normalizeOptionalText(form.live_url),
-        github_url: normalizeOptionalText(form.github_url),
+        live_url: normalizeProjectUrl(form.live_url),
+        github_url: normalizeProjectUrl(form.github_url),
         cover_image: normalizeOptionalText(form.cover_image),
         notes: normalizeOptionalText(form.notes),
         start_date: normalizeOptionalText(form.start_date),
@@ -134,14 +139,14 @@ export default function ProjectForm({ mode, project }: { mode: "create" | "edit"
           <Input
             label="Deployed Project URL"
             placeholder="https://your-project.com"
-            type="url"
+            type="text"
             value={form.live_url ?? ""}
             onChange={(e) => updateField("live_url", e.target.value)}
           />
           <Input
             label="GitHub Repository URL"
             placeholder="https://github.com/username/repo"
-            type="url"
+            type="text"
             value={form.github_url ?? ""}
             onChange={(e) => updateField("github_url", e.target.value)}
           />

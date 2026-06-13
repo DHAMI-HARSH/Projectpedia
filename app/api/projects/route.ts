@@ -1,6 +1,6 @@
 import { isAdminRequestAuthenticated } from "@/lib/admin-auth";
 import { supabaseAdmin } from "@/lib/supabase-server";
-import { slugify } from "@/lib/utils";
+import { normalizeExternalUrl, slugify } from "@/lib/utils";
 import { Milestone } from "@/types/project";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
@@ -25,7 +25,12 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
   const milestones = body.milestones ?? [];
-  const payload = { ...body, slug: slugify(body.title) };
+  const payload = {
+    ...body,
+    github_url: normalizeExternalUrl(body.github_url),
+    live_url: normalizeExternalUrl(body.live_url),
+    slug: slugify(body.title),
+  };
   delete payload.milestones;
   const { data, error } = await supabaseAdmin.from("projects").insert(payload).select("*").single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

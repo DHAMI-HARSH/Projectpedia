@@ -1,6 +1,6 @@
 import { isAdminRequestAuthenticated } from "@/lib/admin-auth";
 import { supabaseAdmin } from "@/lib/supabase-server";
-import { slugify } from "@/lib/utils";
+import { normalizeExternalUrl, slugify } from "@/lib/utils";
 import { Milestone } from "@/types/project";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
@@ -25,7 +25,9 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   const body = await req.json();
   const milestones = body.milestones ?? [];
   delete body.milestones;
-  const payload = body.title ? { ...body, slug: slugify(body.title) } : body;
+  const payload = body.title
+    ? { ...body, github_url: normalizeExternalUrl(body.github_url), live_url: normalizeExternalUrl(body.live_url), slug: slugify(body.title) }
+    : { ...body, github_url: normalizeExternalUrl(body.github_url), live_url: normalizeExternalUrl(body.live_url) };
   const { data, error } = await supabaseAdmin.from("projects").update(payload).eq("id", params.id).select("*").single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   await supabaseAdmin.from("milestones").delete().eq("project_id", params.id);

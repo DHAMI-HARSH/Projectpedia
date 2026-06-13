@@ -4,12 +4,23 @@ import { ArrowUpDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import StatusBadge from "./StatusBadge";
 import TechChip from "./TechChip";
+import { normalizeExternalUrl } from "@/lib/utils";
 
 type Key = "title" | "status" | "start_date";
 export default function ProjectTableView({ projects }: { projects: Project[] }) {
   const [key, setKey] = useState<Key>("title");
   const [asc, setAsc] = useState(true);
-  const rows = useMemo(() => [...projects].sort((a, b) => `${a[key] ?? ""}`.localeCompare(`${b[key] ?? ""}`) * (asc ? 1 : -1)), [projects, key, asc]);
+  const rows = useMemo(
+    () =>
+      [...projects]
+        .sort((a, b) => `${a[key] ?? ""}`.localeCompare(`${b[key] ?? ""}`) * (asc ? 1 : -1))
+        .map((project) => ({
+          ...project,
+          githubUrl: normalizeExternalUrl(project.github_url),
+          liveUrl: normalizeExternalUrl(project.live_url),
+        })),
+    [projects, key, asc],
+  );
   const headers: { key?: Key; label: string }[] = [
     { label: "#" },
     { key: "title", label: "Name" },
@@ -38,9 +49,9 @@ export default function ProjectTableView({ projects }: { projects: Project[] }) 
               <td className="p-3 text-[var(--text-secondary)]">{p.start_date ?? "-"}</td>
               <td className="p-3 text-[var(--text-secondary)]">
                 <div className="flex flex-wrap gap-3">
-                  {p.live_url ? <a className="font-medium text-[var(--accent)] hover:text-[var(--accent-hover)]" href={p.live_url} rel="noreferrer" target="_blank">Live</a> : null}
-                  {p.github_url ? <a className="font-medium text-[var(--accent)] hover:text-[var(--accent-hover)]" href={p.github_url} rel="noreferrer" target="_blank">GitHub</a> : null}
-                  {!p.live_url && !p.github_url ? <span>-</span> : null}
+                  {p.liveUrl ? <a className="font-medium text-[var(--accent)] hover:text-[var(--accent-hover)]" href={p.liveUrl} rel="noreferrer" target="_blank">Live</a> : null}
+                  {p.githubUrl ? <a className="font-medium text-[var(--accent)] hover:text-[var(--accent-hover)]" href={p.githubUrl} rel="noreferrer" target="_blank">GitHub</a> : null}
+                  {!p.liveUrl && !p.githubUrl ? <span>-</span> : null}
                 </div>
               </td>
             </tr>

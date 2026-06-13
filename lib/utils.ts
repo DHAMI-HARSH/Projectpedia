@@ -11,6 +11,21 @@ export function slugify(title: string): string {
   return `${base}-${suffix}`;
 }
 
+export function normalizeExternalUrl(url?: string) {
+  const value = url?.trim();
+  if (!value) return undefined;
+  if (/^[a-z][a-z\d+.-]*:\/\//i.test(value)) return value;
+  if (value.startsWith("//")) return `https:${value}`;
+  if (value.startsWith("www.")) return `https://${value}`;
+  if (value.startsWith("/")) return value;
+
+  try {
+    return new URL(`https://${value}`).toString();
+  } catch {
+    return value;
+  }
+}
+
 export function formatDate(dateStr?: string): string {
   if (!dateStr) return "";
   return format(new Date(dateStr), "MMM yyyy");

@@ -7,6 +7,7 @@ import ScreenshotGallery from "@/components/projects/ScreenshotGallery";
 import StatusBadge from "@/components/projects/StatusBadge";
 import TechChip from "@/components/projects/TechChip";
 import { supabaseAdmin } from "@/lib/supabase-server";
+import { normalizeExternalUrl } from "@/lib/utils";
 import { ExternalLink, GitBranch } from "lucide-react";
 
 export const revalidate = 60;
@@ -20,6 +21,8 @@ export default async function ProjectDocPage({ params }: { params: { slug: strin
   const { data: project } = await supabaseAdmin.from("projects").select("*").eq("slug", params.slug).single();
   if (!project) return <div>Not found</div>;
   const { data: milestones } = await supabaseAdmin.from("milestones").select("*").eq("project_id", project.id).order("order_index");
+  const liveUrl = normalizeExternalUrl(project.live_url);
+  const githubUrl = normalizeExternalUrl(project.github_url);
 
   return (
     <div id="top">
@@ -34,16 +37,16 @@ export default async function ProjectDocPage({ params }: { params: { slug: strin
             </div>
             {project.short_desc ? <p className="max-w-3xl text-lg leading-8 text-[var(--text-secondary)]">{project.short_desc}</p> : null}
             {!!project.tech_stack?.length && <div className="mt-5 flex flex-wrap gap-2">{project.tech_stack.map((t: string) => <TechChip key={t} label={t} />)}</div>}
-            {project.live_url || project.github_url ? (
+            {liveUrl || githubUrl ? (
               <div className="mt-5 flex flex-wrap gap-3">
-                {project.live_url ? (
-                  <a className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(15,118,110,0.18)] hover:bg-[var(--accent-hover)]" href={project.live_url} rel="noreferrer" target="_blank">
+                {liveUrl ? (
+                  <a className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(15,118,110,0.18)] hover:bg-[var(--accent-hover)]" href={liveUrl} rel="noreferrer" target="_blank">
                     <ExternalLink className="h-4 w-4" />
                     View Live Project
                   </a>
                 ) : null}
-                {project.github_url ? (
-                  <a className="inline-flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-white px-4 py-2 text-sm font-semibold text-[var(--text-primary)] hover:border-[var(--accent)] hover:text-[var(--accent)]" href={project.github_url} rel="noreferrer" target="_blank">
+                {githubUrl ? (
+                  <a className="inline-flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-white px-4 py-2 text-sm font-semibold text-[var(--text-primary)] hover:border-[var(--accent)] hover:text-[var(--accent)]" href={githubUrl} rel="noreferrer" target="_blank">
                     <GitBranch className="h-4 w-4" />
                     View Source
                   </a>

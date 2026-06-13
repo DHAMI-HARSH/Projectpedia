@@ -4,8 +4,12 @@ import { ExternalLink, GitBranch } from "lucide-react";
 import Link from "next/link";
 import StatusBadge from "./StatusBadge";
 import TechChip from "./TechChip";
+import { normalizeExternalUrl } from "@/lib/utils";
 
 export default function ProjectListRow({ project }: { project: Project }) {
+  const liveUrl = normalizeExternalUrl(project.live_url);
+  const githubUrl = normalizeExternalUrl(project.github_url);
+
   return (
     <article className="rounded-[26px] border border-slate-300 bg-white p-5 shadow-[0_1px_0_rgba(15,23,42,0.02)]">
       <div className="grid gap-5 lg:grid-cols-[180px_minmax(0,1fr)_170px] lg:items-center">
@@ -54,14 +58,14 @@ export default function ProjectListRow({ project }: { project: Project }) {
             <Link href={`/projects/${project.slug}`} className="inline-flex items-center gap-2 text-[#0f4fcf] hover:text-[#0d45b3]">
               Docs
             </Link>
-            {project.live_url ? (
-              <a className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-950" href={project.live_url} rel="noreferrer" target="_blank">
+            {liveUrl ? (
+              <a className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-950" href={liveUrl} rel="noreferrer" target="_blank">
                 <ExternalLink className="h-4 w-4" />
                 Live
               </a>
             ) : null}
-            {project.github_url ? (
-              <a className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-950" href={project.github_url} rel="noreferrer" target="_blank">
+            {githubUrl ? (
+              <a className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-950" href={githubUrl} rel="noreferrer" target="_blank">
                 <GitBranch className="h-4 w-4" />
                 Code
               </a>
