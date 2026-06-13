@@ -9,11 +9,11 @@ export default function ProjectListRow({ project }: { project: Project }) {
   return (
     <article className="rounded-[26px] border border-slate-300 bg-white p-5 shadow-[0_1px_0_rgba(15,23,42,0.02)]">
       <div className="grid gap-5 lg:grid-cols-[180px_minmax(0,1fr)_170px] lg:items-center">
-        <div className="overflow-hidden rounded-[22px] border border-slate-200 bg-[linear-gradient(135deg,#f8fafc,#e2e8f0)]">
+        <div className="aspect-[4/3] overflow-hidden rounded-[22px] border border-slate-200 bg-[linear-gradient(135deg,#f8fafc,#e2e8f0)]">
           {project.cover_image ? (
-            <img alt={project.title} className="h-full min-h-[140px] w-full object-cover" loading="lazy" src={project.cover_image} />
+            <img alt={project.title} className="h-full w-full object-cover" loading="lazy" src={project.cover_image} />
           ) : (
-            <div className="flex min-h-[140px] items-center justify-center px-6 text-center">
+            <div className="flex h-full items-center justify-center px-6 text-center">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">{project.category}</p>
                 <p className="mt-2 text-sm font-medium text-slate-700">{project.status}</p>

@@ -5,7 +5,7 @@ import Sidebar from "../layout/Sidebar";
 import ProjectCard from "./ProjectCard";
 import ProjectListRow from "./ProjectListRow";
 import { Project } from "@/types/project";
-import { Bell, ChevronDown, LayoutGrid, List, Menu } from "lucide-react";
+import { ChevronDown, LayoutGrid, List, Menu } from "lucide-react";
 import { useMemo, useState } from "react";
 
 type Tab = "overview" | "recent" | "starred" | "archived";
@@ -82,12 +82,12 @@ export default function DashboardClient({ projects }: { projects: Project[] }) {
 
   return (
     <div className="min-h-screen bg-[#f4f6fb] text-[var(--text-primary)]">
-      <Sidebar projects={projects} search={search} onSearchChange={setSearch} />
-      <MobileSidebarDrawer open={open} onClose={() => setOpen(false)} projects={projects} search={search} onSearchChange={setSearch} />
+      <Sidebar search={search} onSearchChange={setSearch} />
+      <MobileSidebarDrawer open={open} onClose={() => setOpen(false)} search={search} onSearchChange={setSearch} />
 
       <main className="min-h-screen lg:pl-[320px]">
         <div className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/90 backdrop-blur">
-          <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
             <button
               aria-label="Open navigation"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 lg:hidden"
@@ -97,7 +97,7 @@ export default function DashboardClient({ projects }: { projects: Project[] }) {
               <Menu className="h-5 w-5" />
             </button>
 
-            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
+            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
               {tabItems.map((item) => (
                 <button
                   key={item.id}
@@ -118,25 +118,6 @@ export default function DashboardClient({ projects }: { projects: Project[] }) {
                   {tab === item.id ? <span className="absolute inset-x-3 -bottom-4 h-0.5 rounded-full bg-[#0f4fcf]" /> : null}
                 </button>
               ))}
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button
-                aria-label="Notifications"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50"
-                type="button"
-              >
-                <Bell className="h-5 w-5" />
-              </button>
-              <button
-                aria-label="User menu"
-                className="h-10 w-10 overflow-hidden rounded-full border border-slate-200 bg-slate-200 shadow-sm"
-                type="button"
-              >
-                <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(135deg,#e2e8f0,#cbd5e1)] text-xs font-semibold text-slate-700">
-                  JD
-                </div>
-              </button>
             </div>
           </div>
         </div>

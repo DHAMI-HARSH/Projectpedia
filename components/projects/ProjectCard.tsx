@@ -9,7 +9,7 @@ import TechChip from "./TechChip";
 export default function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="hover-lift surface-glow motion-enter rounded-[28px] border border-white/70 bg-white/95 p-4 shadow-[0_18px_55px_rgba(15,35,61,0.06)]">
-      <div className="relative mb-4 h-48 overflow-hidden rounded-[22px] bg-zinc-100">
+      <div className="relative mb-4 aspect-[16/10] overflow-hidden rounded-[22px] bg-zinc-100">
         {project.cover_image ? <img alt={project.title} className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.03]" loading="lazy" src={project.cover_image} /> : null}
       </div>
       <div className="mb-3 flex items-center justify-between gap-3">

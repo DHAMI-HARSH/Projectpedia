@@ -7,7 +7,6 @@ import ScreenshotGallery from "@/components/projects/ScreenshotGallery";
 import StatusBadge from "@/components/projects/StatusBadge";
 import TechChip from "@/components/projects/TechChip";
 import { supabaseAdmin } from "@/lib/supabase-server";
-import { Project } from "@/types/project";
 import { ExternalLink, GitBranch } from "lucide-react";
 
 export const revalidate = 60;
@@ -18,14 +17,13 @@ export async function generateStaticParams() {
 }
 
 export default async function ProjectDocPage({ params }: { params: { slug: string } }) {
-  const { data: projects } = await supabaseAdmin.from("projects").select("*").order("created_at", { ascending: false });
   const { data: project } = await supabaseAdmin.from("projects").select("*").eq("slug", params.slug).single();
   if (!project) return <div>Not found</div>;
   const { data: milestones } = await supabaseAdmin.from("milestones").select("*").eq("project_id", project.id).order("order_index");
 
   return (
     <div id="top">
-      <Sidebar projects={(projects ?? []) as Project[]} />
+      <Sidebar />
       <div className="mx-auto flex max-w-[1380px] gap-6 lg:ml-[320px]">
         <main className="max-w-4xl flex-1 p-6">
           <section className="motion-enter mb-6 rounded-[30px] border border-white/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(224,242,254,0.92),rgba(255,237,213,0.88))] p-6 shadow-[0_24px_80px_rgba(15,35,61,0.08)]">
